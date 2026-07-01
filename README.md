@@ -3,7 +3,15 @@ Repositorio para el código de Backend correspondiente a las páginas web de IEE
 
 El objetivo de este repositorio es manejar un BackEnd que funcionará para tres páginas web, esto debido a que dichas tres compartirán funciones similares
 
-Se espera manejar ramas por funcionalidad donde poseeran el nombre de la funcionalidad seguido por la palabra "general"  (por ejemplo "Login_Branch_General"), en caso en que se necesite una funcionalidad epecífica para una página específica será necesario especificar el nombre de la página en lugar de la palabra "general" (por ejemplo "Registro_Solicitudes_CS")
+<br />
+
+## **Respecto A Las Ramas**
+Se espera manejar ramas por funcionalidad donde poseeran el nombre de la funcionalidad seguido por la palabra "general"  (por ejemplo "Login_Branch_General"), en caso en que se necesite una funcionalidad epecífica para una página específica será necesario especificar el nombre de la página en lugar de la palabra "general" (por ejemplo "Registro_Solicitudes_CS")\ 
+
+Adicionalmente, se aclara que cualquier persona puede trabajar en cualquiera de las ramas que ya estén creadas sin importar que ellos no hayan sido los responsables de su origen
+
+Finalmente, las ramas deben ser eliminadas progresivamente se implementen los cambios a la rama "main"; al final del proyecto solo debe quedar la rama "main"
+
 
 <br />
 

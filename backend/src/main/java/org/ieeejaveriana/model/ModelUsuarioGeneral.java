@@ -12,7 +12,7 @@ public class ModelUsuarioGeneral {
     public String correo;
     public String tipoUsuario;
     public String contraseña;
-   
+
 
     public Long getId() {
         return id;

@@ -1,49 +1,52 @@
 package org.ieeejaveriana.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 
 @Data
 @NoArgsConstructor
 public class ModelUsuarioGeneral {
-    public Long id;
-    public String correo;
-    public String tipoUsuario;
-    public String contraseña;
+    public Long IdUsuario;
+    public String CorreoUsuario;
+
+    @JsonIgnore //COM: ignora este parametro al momento de manejar Jsons
+    public String ContraseñaUsuario;
 
 
-    public Long getId() {
-        return id;
+    public Long getIdUsuario() {
+        return IdUsuario;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdUsuario(Long IdUsuario) {
+        this.IdUsuario = IdUsuario;
     }
 
-    public String getCorreo() {
-        return correo;
+    public String getCorreoUsuario() {
+        return CorreoUsuario;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public void setCorreoUsuario(String correoUsuario) {
+        this.CorreoUsuario = correoUsuario;
     }
 
-    public String getTipoUsuario() {
-        return tipoUsuario;
+    public String getContraseñaUsuario() {
+        return ContraseñaUsuario;
     }
 
-    public void setTipoUsuario(String tipoUsuario) {
-        this.tipoUsuario = tipoUsuario;
-    }
-
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setContraseñaUsuario(String ContraseñaUsuario) throws NoSuchAlgorithmException{
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        byte[] bytesDelHash = md.digest(ContraseñaUsuario.getBytes(StandardCharsets.UTF_8));
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : bytesDelHash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        this.ContraseñaUsuario = hexString.toString();
     }
 
 

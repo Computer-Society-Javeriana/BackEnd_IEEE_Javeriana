@@ -22,7 +22,8 @@ public class ControllerLoginGeneral {
     private ServiceUsuarioGeneral serviceUsuarioGeneral;
 
     @PostMapping("/register")
-    public ModelUsuarioGeneral register(@RequestParam String CorreoUsuario, @RequestParam String ContraseñaUsuario) throws NoSuchAlgorithmException {
+    public ModelUsuarioGeneral register(@RequestParam("CorreoUsuario") String CorreoUsuario, @RequestParam("ContraseñaUsuario") String ContraseñaUsuario) throws NoSuchAlgorithmException {
+
         ModelUsuarioGeneral UsuarioNuevo = new ModelUsuarioGeneral();
         UsuarioNuevo.setCorreoUsuario(CorreoUsuario);
         UsuarioNuevo.setContraseñaUsuario(ContraseñaUsuario);
@@ -30,7 +31,8 @@ public class ControllerLoginGeneral {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login_de_usuario(@RequestParam String CorreoUsuario, @RequestParam String ContraseñaUsuario, HttpSession SessionUsuario) {
+    public ResponseEntity<?> login_de_usuario(@RequestParam("CorreoUsuario") String CorreoUsuario, @RequestParam("ContraseñaUsuario") String ContraseñaUsuario, HttpSession SessionUsuario) {
+
         try {
             ModelUsuarioGeneral usuario = serviceUsuarioGeneral.login_usuario(CorreoUsuario, ContraseñaUsuario, SessionUsuario);
             return ResponseEntity.ok(usuario);

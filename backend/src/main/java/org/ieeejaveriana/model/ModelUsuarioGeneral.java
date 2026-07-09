@@ -1,16 +1,18 @@
 package org.ieeejaveriana.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.charset.StandardCharsets;
 
-@Data
+@Entity
 @NoArgsConstructor
 public class ModelUsuarioGeneral {
+    @Id
     public Long IdUsuario;
+
     public String CorreoUsuario;
 
     @JsonIgnore //COM: ignora este parametro al momento de manejar Jsons

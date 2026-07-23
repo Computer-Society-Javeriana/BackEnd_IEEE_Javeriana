@@ -22,11 +22,14 @@ public class ControllerLoginGeneral {
     private ServiceUsuarioGeneral serviceUsuarioGeneral;
 
     @PostMapping("/register")
-    public ModelUsuarioGeneral register(@RequestParam("CorreoUsuario") String CorreoUsuario, @RequestParam("ContraseñaUsuario") String ContraseñaUsuario) throws NoSuchAlgorithmException {
+    public ModelUsuarioGeneral register(@RequestParam("NombreUsuario") String NombreUsuario, @RequestParam("CorreoUsuario") String CorreoUsuario, @RequestParam("ContraseñaUsuario") String ContraseñaUsuario, @RequestParam("LinkedInUsuario") String LinkedInUsuario, @RequestParam("GitHubUsuario") String GitHubUsuario ) throws NoSuchAlgorithmException {
 
         ModelUsuarioGeneral UsuarioNuevo = new ModelUsuarioGeneral();
+        UsuarioNuevo.setNombreUsuario(NombreUsuario);
         UsuarioNuevo.setCorreoUsuario(CorreoUsuario);
         UsuarioNuevo.setContraseñaUsuario(ContraseñaUsuario);
+        UsuarioNuevo.setLinkedInUsuario(LinkedInUsuario);
+        UsuarioNuevo.setGitHubUsuario(GitHubUsuario);
         return serviceUsuarioGeneral.registrar_usuario_nuevo(UsuarioNuevo);
     }
 

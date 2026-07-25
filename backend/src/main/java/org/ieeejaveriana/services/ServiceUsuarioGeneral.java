@@ -6,6 +6,8 @@ import org.ieeejaveriana.repository.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+
 import jakarta.servlet.http.HttpSession;
 
 @Service
@@ -23,6 +25,12 @@ public class ServiceUsuarioGeneral {
         }
         return null;
     }
+
+    //METEXPL: Este es un metodo para verificar si un usuario existe con session
+    public ModelUsuarioGeneral encontrar_usuario_por_session(HttpSession sessionUsuario) {
+        return (ModelUsuarioGeneral) sessionUsuario.getAttribute("usuarioLogueado");
+    }
+
 
     //METEXPL: Este metodo es para registrar a nuevos usuarios en la base de datos
     public ModelUsuarioGeneral registrar_usuario_nuevo(ModelUsuarioGeneral UsuarioNuevo) {
@@ -67,6 +75,11 @@ public class ServiceUsuarioGeneral {
     //METEXPL: Este metodo es para realizar logout
     public void logout_usuario(HttpSession SessionUsuario) {
         if (SessionUsuario != null) {
+            ModelUsuarioGeneral UsuarioTemporal = encontrar_usuario_por_session(SessionUsuario);
+            if(UsuarioTemporal != null){
+                LocalDateTime TiempoActual = LocalDateTime.now();
+                UsuarioTemporal.setUltimaConexionUsuario(TiempoActual);
+            }
             SessionUsuario.invalidate();
         }
     }

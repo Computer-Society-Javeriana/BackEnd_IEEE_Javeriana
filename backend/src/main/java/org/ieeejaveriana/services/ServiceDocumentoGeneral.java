@@ -17,10 +17,10 @@ public class ServiceDocumentoGeneral {
     private RepositoryUsuarioGeneral repositoryUsuarioGeneral;
 
     //METEXPL: Este es un metodo para verificar que el autor de un documento existe o no dentro de la base de datos
-    public String encontrar_autor_documento(String AutorDocumento){
+    public Long encontrar_autor_documento(String AutorDocumento){
         for (ModelUsuarioGeneral UsuarioTemporal : repositoryUsuarioGeneral.findAll()) {
-            if (UsuarioTemporal.().equals(AutorDocumento)) {
-                return AutorDocumento;
+            if (UsuarioTemporal.getNombreUsuario().equals(AutorDocumento)) {
+                return UsuarioTemporal.getIdUsuario();
             }
         }
         return null;
@@ -35,5 +35,8 @@ public class ServiceDocumentoGeneral {
         }
         return null;
     }
+
+
+    
 
 }

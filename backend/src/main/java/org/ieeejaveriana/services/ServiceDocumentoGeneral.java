@@ -67,12 +67,14 @@ public class ServiceDocumentoGeneral {
         return DocumentosEncontrados;
     }
 
-    public List<ModelDocumentoGeneral> encontrar_documento_por_palabras_clave (String PalabrasClave) {
+    public List<ModelDocumentoGeneral> encontrar_documento_por_palabras_clave (String PalabrasClave) { //COM: las palabras claves se deben concatenar tipo "palabra1"+" "+"palabra2"
         List<ModelDocumentoGeneral> DocumentosEncontrados = new ArrayList<>();
 
         for (ModelDocumentoGeneral DocumentoTemporal : repositoryDocumentoGeneral.findAll()){
             String DescripcionDocumentoTemporal = DocumentoTemporal.getResumenDocumento();
-            String[] PalabrasResumen = DescripcionDocumentoTemporal.trim().split("\\s+")
+            String TemasDocumentoTemporal = DocumentoTemporal.getTemasDocumento();
+            String[] PalabrasResumen = DescripcionDocumentoTemporal.trim().split("\\s+");
+            String[] PalabrasTemas = TemasDocumentoTemporal.trim().split("\\s+");
             String[] PalabrasClaves = PalabrasClave.trim().split("\\s+");
 
             for(String PalabraResumen : PalabrasResumen){
@@ -82,12 +84,30 @@ public class ServiceDocumentoGeneral {
                     }
                 }
             }
+
+            for(String PalabraTema : PalabrasTemas){
+                for(String PalabraClave : PalabrasClaves){
+                    if(PalabraClave.equals(PalabraTema)){
+                        DocumentosEncontrados.add(DocumentoTemporal);
+                    }
+                }
+            }
+
         }
 
         return DocumentosEncontrados;
     }
 
+    public ModelDocumentoGeneral guardar_documento_nuevo(ModelDocumentoGeneral DocumentoNuevo){
+        if(encontrar_nombre_documento(DocumentoNuevo.getNombreDocumento()))
+    }
+    public ModelUsuarioGeneral registrar_usuario_nuevo(ModelUsuarioGeneral UsuarioNuevo) {
+        if(encontrar_usuario_por_correo(UsuarioNuevo.getCorreoUsuario()) != null){ //METUSEEXPL: se utiliza el metodo "existe_correo_usuario" para verificar si el CorreoUsuario que esta tratando de ingresar un nuevo usuario ya esta siendo usado por otro CorreoUsuario
+            throw new RuntimeException("El CorreoUsuario que intenta ingresar ya está registrado");
+        }
+        return repositoryUsuarioGeneral.save(UsuarioNuevo);
+    }
 
-    
+
 
 }

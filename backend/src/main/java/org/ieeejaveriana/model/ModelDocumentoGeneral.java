@@ -1,8 +1,6 @@
 package org.ieeejaveriana.model;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 import java.sql.Blob;
@@ -11,25 +9,45 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "Proyectos")
 @NoArgsConstructor
 public class ModelDocumentoGeneral {
+
     @Id
+    @Column(name = "id_proyecto")
     public Long IdDocumento;
 
+    @Column(name = "nombre")
     public String NombreDocumento;
 
+    @Column(name = "descripcion")
     public String ResumenDocumento;
 
+    @Column(name = "direccion")
     public String DireccionContenidoDocumento;
 
+    @Column(name = "github")
     public String DireccionCodigoProyecto;
 
+    @Column(name="imagen")
     public String DireccionPreimagenDocumento;
 
+    @Column(name = "estado")
     public String EstadoDocumento;
 
+    @Column(name = "temas")
+    public String TemasDocumento;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "Usuarios_proyectos", //COM: nombre de tabla intermedia que representa la relacion muchos a muchos
+            joinColumns = @JoinColumn(name = "id_proyecto") //COM: nombre de la variable de IDs de proyectos en la base de datos
+    )
+
+    @Column(name = "id_usuario")
     public List<Long> AutoresDocumentoId;
 
+    @Column(name = "fecha")
     public LocalDate FechaFinalizacionDocumento;
 
     public Long getIdDocumento() {
@@ -103,5 +121,12 @@ public class ModelDocumentoGeneral {
     public void setFechaFinalizacionDocumento(LocalDate fechaFinalizacionDocumento) {
         FechaFinalizacionDocumento = fechaFinalizacionDocumento;
     }
-}
 
+    public String getTemasDocumento() {
+        return TemasDocumento;
+    }
+
+    public void setTemasDocumento(String temasDocumento) {
+        TemasDocumento = temasDocumento;
+    }
+}

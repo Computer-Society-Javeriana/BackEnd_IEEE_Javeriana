@@ -26,6 +26,16 @@ public class ServiceUsuarioGeneral {
         return null;
     }
 
+    //METEXPL: Este es un metodo paraencontrar a un usuario por su id
+    public ModelUsuarioGeneral encontrar_usuario_por_id(Long IdUsuario){
+        for (ModelUsuarioGeneral UsuarioTemporal : repositoryUsuarioGeneral.findAll()) {
+            if (UsuarioTemporal.getIdUsuario().equals(IdUsuario)) {
+                return UsuarioTemporal;
+            }
+        }
+        return null;
+    }
+
     //METEXPL: Este es un metodo para verificar si un usuario existe con session
     public ModelUsuarioGeneral encontrar_usuario_por_session(HttpSession sessionUsuario) {
         return (ModelUsuarioGeneral) sessionUsuario.getAttribute("usuarioLogueado");

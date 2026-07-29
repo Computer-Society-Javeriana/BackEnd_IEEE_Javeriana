@@ -49,7 +49,7 @@ public class ModelDocumentoGeneral {
     @ElementCollection
     @CollectionTable(
             name = "temas_proyetos", //COM: nombre de tabla intermedia que representa la relacion muchos a muchos
-            joinColumns = @JoinColumn(name = "id_tema") //COM: nombre de la variable de IDs de proyectos en la base de datos
+            joinColumns = @JoinColumn(name = "id_proyecto") //COM: nombre de la variable de IDs de proyectos en la base de datos
     )
     @Column(name = "id_tema")
     public List<Long> temas;

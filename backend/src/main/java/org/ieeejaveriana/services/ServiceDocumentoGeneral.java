@@ -12,9 +12,7 @@ import org.ieeejaveriana.repository.RepositoryUsuarioGeneral;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 @Service
 public class ServiceDocumentoGeneral {
@@ -39,7 +37,7 @@ public class ServiceDocumentoGeneral {
 
             if (UsuarioTemporal.getNombreUsuario().equals(AutorDocumento)) {
                 return UsuarioTemporal.getIdUsuario();
-            } else if(DistanciaEntrePalabras <= UsuarioTemporal.getNombreUsuario().length()){
+            } else if(DistanciaEntrePalabras <= ((UsuarioTemporal.getNombreUsuario().length())*20)/100){
                 return UsuarioTemporal.getIdUsuario();
             }
 
@@ -55,7 +53,7 @@ public class ServiceDocumentoGeneral {
             int DistanciaEntrePalabras = DistaciaPalabras.apply(DocumentoTemporal.getNombreDocumento(), NombreDocumento);
             if (DocumentoTemporal.getNombreDocumento().equals(NombreDocumento)) {
                 return DocumentoTemporal;
-            } else if(DistanciaEntrePalabras <= DocumentoTemporal.getNombreDocumento().length()){
+            } else if(DistanciaEntrePalabras <= ((DocumentoTemporal.getNombreDocumento().length())*20)/100){
                 return DocumentoTemporal;
             }
         }
@@ -64,64 +62,75 @@ public class ServiceDocumentoGeneral {
 
     //METEXPL: Este es un metodo para encontrar los documentos de un autor especifico (por nombre)
     public List<ModelDocumentoGeneral> encontrar_documentos_por_autor_del_documento(String AutorDocumento){
+        Long IdAutor = encontrar_autor_documento(AutorDocumento);
 
-        if(encontrar_autor_documento(AutorDocumento)==null){
-            return null;
+        if(IdAutor == null){
+            return new ArrayList<>();
         }
 
-        List<ModelDocumentoGeneral> DocumentosEncontrados = new ArrayList<>();
+        return repositoryDocumentoGeneral.encontrarDocumentosPorIdAutor(IdAutor);
+    }
 
-        for (ModelDocumentoGeneral DocumentoTemporal : repositoryDocumentoGeneral.findAll()){
-            List<Long> IdsAutoresDocumentoTemporal = DocumentoTemporal.getAutoresDocumentoId();
+    //METEXPL: Este es un metodo para encontrar los documentos por palabras clave
+    public List<ModelDocumentoGeneral> encontrar_documento_por_palabras_clave (String PalabrasClave) {
+        List<ModelDocumentoGeneral> DocumentosEncontrados = new ArrayList<>(); //COM: las palabras claves se deben concatenar tipo "palabra1"+" "+"palabra2"
 
-            for (Long IdAutor : IdsAutoresDocumentoTemporal){
-                ModelUsuarioGeneral UsuarioTemporal = serviceUsuarioGeneral.encontrar_usuario_por_id(IdAutor);
+        String[] PalabrasClaves = PalabrasClave.trim().split("\\s+");
+        LevenshteinDistance DistaciaPalabras = new LevenshteinDistance();
 
-                if(UsuarioTemporal.getNombreUsuario().equals(AutorDocumento)){
+        java.util.Map<Long, String> MapaNombresTemas = new java.util.HashMap<>();
+        for (ModelTemaGeneral TemaTemporal : repositoryTemaGeneral.findAll()) {
+            MapaNombresTemas.put(TemaTemporal.getIdTema(), TemaTemporal.getNombreTema());
+        }
+
+        repositoryDocumentoGeneral.findAll().parallelStream().forEach(DocumentoTemporal -> {
+
+            boolean DocumentoYaFueAñadido = false;
+
+            String DescripcionDocumentoTemporal = DocumentoTemporal.getResumenDocumento();
+            if (DescripcionDocumentoTemporal != null) {
+                String[] PalabrasResumen = DescripcionDocumentoTemporal.trim().split("\\s+");
+
+                for(String PalabraResumen : PalabrasResumen){
+                    for(String PalabraClave : PalabrasClaves){
+                        int DistanciaEntrePalabras = DistaciaPalabras.apply(PalabraResumen, PalabraClave);
+
+                        if(PalabraClave.equals(PalabraResumen) || DistanciaEntrePalabras <= ((PalabraResumen.length()*20)/100)){
+                            DocumentoYaFueAñadido = true;
+                            break;
+                        }
+                    }
+                    if(DocumentoYaFueAñadido) break;
+                }
+            }
+
+            if (!DocumentoYaFueAñadido) {
+                List<Long> TemasDocumentoTemporal = DocumentoTemporal.getTemas();
+                if (TemasDocumentoTemporal != null) {
+                    for (Long IdTema : TemasDocumentoTemporal) {
+                        String PalabraTema = MapaNombresTemas.get(IdTema);
+
+                        if (PalabraTema != null) {
+                            for(String PalabraClave : PalabrasClaves){
+                                int DistanciaEntrePalabras = DistaciaPalabras.apply(PalabraTema, PalabraClave);
+
+                                if(PalabraClave.equals(PalabraTema) || DistanciaEntrePalabras <= ((PalabraTema.length())*20)/100){
+                                    DocumentoYaFueAñadido = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(DocumentoYaFueAñadido) break;
+                    }
+                }
+            }
+
+            if (DocumentoYaFueAñadido) {
+                synchronized(DocumentosEncontrados) {
                     DocumentosEncontrados.add(DocumentoTemporal);
                 }
             }
-        }
-
-        return DocumentosEncontrados;
-    }
-
-    public List<ModelDocumentoGeneral> encontrar_documento_por_palabras_clave (String PalabrasClave) { //COM: las palabras claves se deben concatenar tipo "palabra1"+" "+"palabra2"
-        List<ModelDocumentoGeneral> DocumentosEncontrados = new ArrayList<>();
-
-        for (ModelDocumentoGeneral DocumentoTemporal : repositoryDocumentoGeneral.findAll()){
-            String DescripcionDocumentoTemporal = DocumentoTemporal.getResumenDocumento();
-            List<Long> TemasDocumentoTemporal = DocumentoTemporal.getTemas();
-            String[] PalabrasResumen = DescripcionDocumentoTemporal.trim().split("\\s+");
-            String[] PalabrasClaves = PalabrasClave.trim().split("\\s+");
-            LevenshteinDistance DistaciaPalabras = new LevenshteinDistance();
-
-            for(String PalabraResumen : PalabrasResumen){
-                for(String PalabraClave : PalabrasClaves){
-                    int DistanciaEntrePalabras = DistaciaPalabras.apply(PalabraResumen, PalabraClave);
-                    if(PalabraClave.equals(PalabraResumen)){
-                        DocumentosEncontrados.add(DocumentoTemporal);
-                    } else if(DistanciaEntrePalabras <= PalabraResumen.length()){
-                        DocumentosEncontrados.add(DocumentoTemporal);
-                    }
-                }
-            }
-
-            List<String> NombreTemas = new ArrayList<>();
-
-            for (Long IdTema : TemasDocumentoTemporal) {
-                repositoryTemaGeneral.findById(IdTema).ifPresent(NuevoTema -> {NombreTemas.add(NuevoTema.getNombreTema());}); //COM: busca por Id, si lo encuentra busca el nombre del tema y lo guarda en la lista de nombres de temas
-            }
-
-            for(String PalabraTema : NombreTemas){
-                for(String PalabraClave : PalabrasClaves){
-                    if(PalabraClave.equals(PalabraTema)){
-                        DocumentosEncontrados.add(DocumentoTemporal);
-                    }
-                }
-            }
-
-        }
+        });
 
         return DocumentosEncontrados;
     }
@@ -136,39 +145,31 @@ public class ServiceDocumentoGeneral {
 
     //METXPL: Funcion para buscar documentos en el repositorio a partir del nombre, palabras clave o autor
     public List<ModelDocumentoGeneral> buscar_documento_existente(String Informacion){
-        List<Long> IdsDocumentos = new ArrayList<>();
-        List<ModelDocumentoGeneral> DocumentosEncontradosBusqueda = new ArrayList<>();
 
-        try{
-            ModelDocumentoGeneral DocumentoEncontrado = encontrar_nombre_documento(Informacion); //COM: encuentra el documento si la informacion proporcionada se trata de ello
-            Long IdDocumentoEncontrado = DocumentoEncontrado.getIdDocumento();
-            IdsDocumentos.add(IdDocumentoEncontrado);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Map<Long, ModelDocumentoGeneral> DocumentosUnicos = new LinkedHashMap<>();
+        ModelDocumentoGeneral DocumentoPorNombre = encontrar_nombre_documento(Informacion);
+
+        if (DocumentoPorNombre != null) {
+            DocumentosUnicos.put(DocumentoPorNombre.getIdDocumento(), DocumentoPorNombre);
         }
 
-        try {
-            List<ModelDocumentoGeneral> DocumentosEncontrados = new ArrayList<>();
+        List<ModelDocumentoGeneral> DocumentosPorAutor = encontrar_documentos_por_autor_del_documento(Informacion);
 
-            DocumentosEncontrados.addAll(encontrar_documentos_por_autor_del_documento(Informacion)); //COM: encuentra los documentos de un autor si su nombre (o nombres) son la informacion
-
-            DocumentosEncontrados.addAll(encontrar_documento_por_palabras_clave(Informacion)); //COM: añade documentos a partir de palabras clave si la informacion son palabras clave
-
-            for(ModelDocumentoGeneral DocumentoENcontrado : DocumentosEncontrados){ //COM: trata de obtener los Ids de los dcumentos encontrados
-                Long IdDocumentoEncontrado = DocumentoENcontrado.getIdDocumento();
-                if(!IdsDocumentos.contains(IdDocumentoEncontrado)){ //COM: si por casualidad uno de los Ids de los documentos encontrados es el mismo del Id encontrado por el título, pues no lo añade, sino, lo añade a la lista de Ids
-                    IdsDocumentos.add(IdDocumentoEncontrado);
-                }
+        if (DocumentosPorAutor != null) {
+            for (ModelDocumentoGeneral Documento : DocumentosPorAutor) {
+                DocumentosUnicos.putIfAbsent(Documento.getIdDocumento(), Documento);
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
 
-        for(Long IdDocumentoEncontrado : IdsDocumentos){
-            repositoryDocumentoGeneral.findById(IdDocumentoEncontrado).ifPresent(DocumentosEncontradosBusqueda::add); //COM: busca en la db si se encuentra el Id del documento, si lo encuentra toma el objeto Documento y lo añade a la lista de documentos
+        List<ModelDocumentoGeneral> DocumentosPorPalabras = encontrar_documento_por_palabras_clave(Informacion);
+
+        if (DocumentosPorPalabras != null) {
+            for (ModelDocumentoGeneral Documento : DocumentosPorPalabras) {
+                DocumentosUnicos.putIfAbsent(Documento.getIdDocumento(), Documento);
+            }
         }
 
-        return DocumentosEncontradosBusqueda;
+        return new ArrayList<>(DocumentosUnicos.values());
     }
 
 }

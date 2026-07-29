@@ -20,4 +20,11 @@ public class ServiceTemaGeneral {
         }
         return null;
     }
+
+    public ModelTemaGeneral guardar_tema(ModelTemaGeneral TemaNuevo){
+        if(encontrar_tema_por_nombre(TemaNuevo.getNombreTema()) != null){
+            throw new RuntimeException("El Nombre de tema que intenta ingresar ya está registrado"); //METUSEEXPL: se utiliza el metodo "encontrar_tema_por_nombre" para verificar si el NombreTema que esta tratando de ingresar ya existe
+        }
+        return repositoryTemaGeneral.save(TemaNuevo);
+    }
 }

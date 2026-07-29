@@ -36,6 +36,26 @@ public class ServiceUsuarioGeneral {
         return null;
     }
 
+    //METEXPL: Este es un metodo paraencontrar a un usuario por su nombre
+    public ModelUsuarioGeneral encontrar_usuario_por_nombre(String NombreUsuario){
+        for (ModelUsuarioGeneral UsuarioTemporal : repositoryUsuarioGeneral.findAll()) {
+            if (UsuarioTemporal.getNombreUsuario().equals(NombreUsuario)) {
+                return UsuarioTemporal;
+            }
+        }
+        return null;
+    }
+
+    //METEXPL: Este es un metodo paraencontrar a un usuario por su nombre pero da el Id
+    public Long encontrar_id_usuario_por_nombre(String NombreUsuario){
+        for (ModelUsuarioGeneral UsuarioTemporal : repositoryUsuarioGeneral.findAll()) {
+            if (UsuarioTemporal.getNombreUsuario().equals(NombreUsuario)) {
+                return UsuarioTemporal.getIdUsuario();
+            }
+        }
+        return null;
+    }
+
     //METEXPL: Este es un metodo para verificar si un usuario existe con session
     public ModelUsuarioGeneral encontrar_usuario_por_session(HttpSession sessionUsuario) {
         return (ModelUsuarioGeneral) sessionUsuario.getAttribute("usuarioLogueado");
@@ -44,6 +64,7 @@ public class ServiceUsuarioGeneral {
 
     //METEXPL: Este metodo es para registrar a nuevos usuarios en la base de datos
     public ModelUsuarioGeneral registrar_usuario_nuevo(ModelUsuarioGeneral UsuarioNuevo) {
+
         if(encontrar_usuario_por_correo(UsuarioNuevo.getCorreoUsuario()) != null){ //METUSEEXPL: se utiliza el metodo "existe_correo_usuario" para verificar si el CorreoUsuario que esta tratando de ingresar un nuevo usuario ya esta siendo usado por otro CorreoUsuario
             throw new RuntimeException("El CorreoUsuario que intenta ingresar ya está registrado");
         }

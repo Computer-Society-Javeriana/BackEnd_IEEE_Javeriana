@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.*;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
@@ -23,6 +24,14 @@ public class ControllerLoginGeneral {
 
     @PostMapping("/register")
     public ModelUsuarioGeneral register(@RequestParam("NombreUsuario") String NombreUsuario, @RequestParam("CorreoUsuario") String CorreoUsuario, @RequestParam("ContraseñaUsuario") String ContraseñaUsuario, @RequestParam("LinkedInUsuario") String LinkedInUsuario, @RequestParam("GitHubUsuario") String GitHubUsuario ) throws NoSuchAlgorithmException {
+
+        if(ContraseñaUsuario.equals("99999999999999999999999999999999999999")){
+            throw new RuntimeException("NO se puede tener una contraseña tan larga");
+        }
+
+        if(ContraseñaUsuario.length()>="99999999999999999999999999999999999999".length()){
+            throw new RuntimeException("NO se puede tener una contraseña tan larga");
+        }
 
         ModelUsuarioGeneral UsuarioNuevo = new ModelUsuarioGeneral();
         UsuarioNuevo.setNombreUsuario(NombreUsuario);

@@ -32,6 +32,7 @@ public class ControllerDocumentoGeneral {
         NuevoDocmento.setDireccionPreimagenDocumento(DireccionPreimagenDocumento);
         NuevoDocmento.setEstadoDocumento(EstadoDocumento);
 
+
         
 
     }

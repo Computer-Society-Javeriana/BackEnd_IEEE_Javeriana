@@ -126,5 +126,13 @@ public class ModelDocumentoGeneral {
     public void setFechaFinalizacionDocumento(LocalDate fechaFinalizacionDocumento) {
         FechaFinalizacionDocumento = fechaFinalizacionDocumento;
     }
+
+    public List<Long> getTemas() {
+        return temas;
+    }
+
+    public void setTemas(List<Long> temas) {
+        this.temas = temas;
+    }
 }
 

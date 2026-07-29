@@ -98,15 +98,15 @@ public class ServiceDocumentoGeneral {
         return DocumentosEncontrados;
     }
 
+    //METXPL: Funcion que sirve para guardar documentos en la base de datos
     public ModelDocumentoGeneral guardar_documento_nuevo(ModelDocumentoGeneral DocumentoNuevo){
-        if(encontrar_nombre_documento(DocumentoNuevo.getNombreDocumento()))
-    }
-    public ModelUsuarioGeneral registrar_usuario_nuevo(ModelUsuarioGeneral UsuarioNuevo) {
-        if(encontrar_usuario_por_correo(UsuarioNuevo.getCorreoUsuario()) != null){ //METUSEEXPL: se utiliza el metodo "existe_correo_usuario" para verificar si el CorreoUsuario que esta tratando de ingresar un nuevo usuario ya esta siendo usado por otro CorreoUsuario
-            throw new RuntimeException("El CorreoUsuario que intenta ingresar ya está registrado");
+        if(encontrar_nombre_documento(DocumentoNuevo.getNombreDocumento()) != null){
+            throw new RuntimeException("El Nombre de Documento que intenta ingresar ya está registrado"); //METUSEEXPL: se utiliza el metodo "existe_nombre_documento para verificar si el NombreDocumento que esta tratando de ingresar un nuevo usuario ya esta siendo usado por otro CorreoUsuario
         }
-        return repositoryUsuarioGeneral.save(UsuarioNuevo);
+        return repositoryDocumentoGeneral.save(DocumentoNuevo);
     }
+
+
 
 
 

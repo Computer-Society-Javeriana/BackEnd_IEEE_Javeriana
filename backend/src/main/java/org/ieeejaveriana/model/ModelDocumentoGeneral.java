@@ -29,26 +29,31 @@ public class ModelDocumentoGeneral {
     @Column(name = "github")
     public String DireccionCodigoProyecto;
 
-    @Column(name="imagen")
+    @Column(name = "imagen")
     public String DireccionPreimagenDocumento;
 
     @Column(name = "estado")
     public String EstadoDocumento;
 
-    @Column(name = "temas")
-    public String TemasDocumento;
+    @Column(name = "fecha")
+    public LocalDate FechaFinalizacionDocumento;
 
     @ElementCollection
     @CollectionTable(
             name = "Usuarios_proyectos", //COM: nombre de tabla intermedia que representa la relacion muchos a muchos
             joinColumns = @JoinColumn(name = "id_proyecto") //COM: nombre de la variable de IDs de proyectos en la base de datos
     )
-
     @Column(name = "id_usuario")
     public List<Long> AutoresDocumentoId;
 
-    @Column(name = "fecha")
-    public LocalDate FechaFinalizacionDocumento;
+    @ElementCollection
+    @CollectionTable(
+            name = "temas_proyetos", //COM: nombre de tabla intermedia que representa la relacion muchos a muchos
+            joinColumns = @JoinColumn(name = "id_tema") //COM: nombre de la variable de IDs de proyectos en la base de datos
+    )
+    @Column(name = "id_tema")
+    public List<Long> temas;
+
 
     public Long getIdDocumento() {
         return IdDocumento;
@@ -121,12 +126,5 @@ public class ModelDocumentoGeneral {
     public void setFechaFinalizacionDocumento(LocalDate fechaFinalizacionDocumento) {
         FechaFinalizacionDocumento = fechaFinalizacionDocumento;
     }
-
-    public String getTemasDocumento() {
-        return TemasDocumento;
-    }
-
-    public void setTemasDocumento(String temasDocumento) {
-        TemasDocumento = temasDocumento;
-    }
 }
+

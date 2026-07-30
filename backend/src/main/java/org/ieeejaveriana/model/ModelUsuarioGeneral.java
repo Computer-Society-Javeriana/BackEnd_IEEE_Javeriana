@@ -9,22 +9,31 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "Usuario")
 @NoArgsConstructor
 public class ModelUsuarioGeneral {
+
     @Id
+    @Column(name = "id_usuario")
     public Long IdUsuario;
 
+    @Column(name = "correo")
     public String CorreoUsuario;
 
+    @Column(name = "contrasenia_hash")
     @JsonIgnore //COM: ignora este parametro al momento de manejar Jsons
     public String ContraseñaUsuario;
 
+    @Column(name = "linkedin")
     public String LinkedInUsuario;
 
+    @Column(name = "github")
     public String GitHubUsuario;
 
+    @Column(name = "nombre")
     public String NombreUsuario;
 
+    @Column(name = "ultima_login")
     public LocalDateTime UltimaConexionUsuario;
 
     public Long getIdUsuario() {

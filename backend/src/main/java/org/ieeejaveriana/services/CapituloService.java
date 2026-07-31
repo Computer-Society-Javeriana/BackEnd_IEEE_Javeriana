@@ -15,7 +15,7 @@ public class CapituloService {
     private CapituloRepository capituloRepository;
 
     public List<Capitulo> listarTodos() {
-        return capituloRepository.findAll();
+        return capituloRepository.findAllByOrderByNombreAsc();
     }
 
     public Optional<Capitulo> buscarPorId(String id) {

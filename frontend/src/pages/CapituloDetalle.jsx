@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { getCapitulo, getUsuarios, getEventos, getLogros, getProyectos } from "../services/api";
 import { getChapterLogoUrl } from "../utils/chapterLogo";
 import { getAvatarUrl } from "../utils/avatar";
+import ProyectosGrafo from "../components/ProyectosGrafo";
 
 export default function CapituloDetalle() {
   const { id } = useParams();
@@ -96,6 +97,13 @@ export default function CapituloDetalle() {
             <p style={{ color: "var(--color-text-secondary)" }}>No hay miembros de la junta registrados para este capítulo.</p>
           )}
         </section>
+
+        {/* Red de Colaboración */}
+        {(proyectos.length > 0 || junta.length > 0) && (
+          <section style={{ marginBottom: "3rem" }}>
+            <ProyectosGrafo proyectos={proyectos} junta={junta} />
+          </section>
+        )}
 
         {/* Proyectos */}
         <section style={{ marginBottom: "3rem" }}>

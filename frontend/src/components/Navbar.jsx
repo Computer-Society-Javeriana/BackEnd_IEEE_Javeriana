@@ -10,7 +10,6 @@ export default function Navbar() {
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand">
           <img src={logoIEEE} alt="IEEE Javeriana" />
-          <span>IEEE Javeriana</span>
         </Link>
         <ul className="navbar-links">
           <li><Link to="/" className={isActive("/")}>Inicio</Link></li>
@@ -19,7 +18,6 @@ export default function Navbar() {
           <li><Link to="/eventos" className={isActive("/eventos")}>Eventos</Link></li>
           <li><Link to="/logros" className={isActive("/logros")}>Logros</Link></li>
           <li><Link to="/equipo" className={isActive("/equipo")}>Equipo</Link></li>
-          <li><Link to="/red" className={isActive("/red")}>Red</Link></li>
           <li><Link to="/login" className="btn btn-primary btn-sm">Ingresar</Link></li>
         </ul>
       </div>

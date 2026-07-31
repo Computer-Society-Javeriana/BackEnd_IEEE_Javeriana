@@ -685,6 +685,136 @@ img {
   transform: translateY(0) scale(1);
 }
 
+/* ==================== GRAFO DE PROYECTOS ==================== */
+.grafo-container {
+  margin-top: 2rem;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.grafo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+}
+
+.grafo-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.grafo-subtitle {
+  margin: 0.2rem 0 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.grafo-legend {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+}
+
+.grafo-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.grafo-legend-dot {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+}
+
+.grafo-legend-persona {
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  box-shadow: 0 0 8px rgba(0, 163, 224, 0.4);
+}
+
+.grafo-legend-proyecto {
+  transform: rotate(45deg);
+  background-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.grafo-canvas {
+  height: 550px;
+  width: 100%;
+  background: var(--color-bg-card);
+}
+
+/* Tooltip */
+.grafo-tooltip {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  min-width: 170px;
+  max-width: 240px;
+  box-shadow: var(--shadow-lg);
+  transition: opacity 0.15s ease;
+}
+
+.grafo-tooltip-badge-row {
+  margin-bottom: 0.2rem;
+}
+
+.grafo-tooltip-badge {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.grafo-tooltip-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  margin-bottom: 0.15rem;
+}
+
+.grafo-tooltip-info {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+}
+
+.grafo-tooltip-extra {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  margin-top: 0.35rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 0.35rem;
+  word-break: break-all;
+}
+
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
   .hero h1 {

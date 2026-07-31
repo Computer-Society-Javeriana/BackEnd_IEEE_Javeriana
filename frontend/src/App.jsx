@@ -8,6 +8,7 @@ import CapituloDetalle from "./pages/CapituloDetalle";
 import Proyectos from "./pages/Proyectos";
 import ProyectoDetalle from "./pages/ProyectoDetalle";
 import Eventos from "./pages/Eventos";
+import EventoDetalle from "./pages/EventoDetalle";
 import Logros from "./pages/Logros";
 import LogroDetalle from "./pages/LogroDetalle";
 import Equipo from "./pages/Equipo";
@@ -15,7 +16,6 @@ import PerfilPublico from "./pages/PerfilPublico";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import MiPerfil from "./pages/MiPerfil";
-import RedColaboracion from "./pages/Red";
 
 export default function App() {
   return (
@@ -30,6 +30,7 @@ export default function App() {
             <Route path="/proyectos" element={<Proyectos />} />
             <Route path="/proyectos/:id" element={<ProyectoDetalle />} />
             <Route path="/eventos" element={<Eventos />} />
+            <Route path="/eventos/:id" element={<EventoDetalle />} />
             <Route path="/logros" element={<Logros />} />
             <Route path="/logros/:id" element={<LogroDetalle />} />
             <Route path="/equipo" element={<Equipo />} />
@@ -37,7 +38,6 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/mi-perfil" element={<MiPerfil />} />
-            <Route path="/red" element={<RedColaboracion />} />
           </Routes>
         </main>
         <Footer />

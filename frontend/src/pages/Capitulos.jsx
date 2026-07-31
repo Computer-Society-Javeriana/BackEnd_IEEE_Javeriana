@@ -6,12 +6,27 @@ import { getChapterLogoUrl } from "../utils/chapterLogo";
 export default function Capitulos() {
   const [capitulos, setCapitulos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const cargarCapitulos = () => {
+    setLoading(true);
+    setError(null);
+    getCapitulos()
+      .then((data) => {
+        const sorted = (Array.isArray(data) ? data : []).sort((a, b) =>
+          (a.nombre || a.idCapitulo || "").localeCompare(b.nombre || b.idCapitulo || "", "es", { sensitivity: "base" })
+        );
+        setCapitulos(sorted);
+      })
+      .catch((err) => {
+        console.error("Error al obtener capítulos:", err);
+        setError("No se pudieron cargar los capítulos. Por favor intenta de nuevo.");
+      })
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
-    getCapitulos()
-      .then(setCapitulos)
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    cargarCapitulos();
   }, []);
 
   return (
@@ -23,6 +38,15 @@ export default function Capitulos() {
 
       {loading ? (
         <p className="loading">Cargando capítulos...</p>
+      ) : error ? (
+        <div style={{ textAlign: "center", padding: "2rem" }}>
+          <p style={{ color: "var(--color-danger)", marginBottom: "1rem" }}>{error}</p>
+          <button onClick={cargarCapitulos} className="btn btn-primary btn-sm">Reintentar</button>
+        </div>
+      ) : capitulos.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "2rem" }}>
+          <p style={{ color: "var(--color-text-secondary)" }}>No hay capítulos disponibles en este momento.</p>
+        </div>
       ) : (
         <div className="grid-3">
           {capitulos.map((cap) => (

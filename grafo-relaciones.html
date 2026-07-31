@@ -1,382 +1,252 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grafo de Relaciones High-End: Personas - Proyectos</title>
-    <!-- Cargar Vis.js Network -->
-    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-    <!-- Google Font: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background-color: #090d16;
-            color: #f8fafc;
-            overflow: hidden;
-        }
-        #header {
-            padding: 18px 30px;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
-        #header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #38bdf8 0%, #34d399 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        #header p {
-            margin: 4px 0 0 0;
-            font-size: 0.85rem;
-            color: #94a3b8;
-        }
-        #legend {
-            display: flex;
-            gap: 20px;
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 18px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            font-size: 0.875rem;
-            color: #cbd5e1;
-            gap: 8px;
-        }
-        .legend-color-persona {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #38bdf8;
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
-        }
-        .legend-color-proyecto {
-            width: 12px;
-            height: 12px;
-            transform: rotate(45deg);
-            background-color: #34d399;
-            box-shadow: 0 0 10px rgba(52, 211, 153, 0.8);
-        }
-        #mynetwork {
-            flex-grow: 1;
-            width: 100%;
-            background-color: #0f172a;
-        }
+    <!-- Vis.js Network -->
+<script type="text/javascript">
+    const dataset = {
+        nodes: [
+            { id: 'u1', label: 'Migao Mendoza', type: 'persona', info: 'Presidente RAS', email: 'migao@javeriana.edu.co' },
+            { id: 'u2', label: 'Empanada Pérez', type: 'persona', info: 'Vicepresidente RAS', email: 'empanada@javeriana.edu.co' },
+            { id: 'u3', label: 'Tamal García', type: 'persona', info: 'Secretario RAS', email: 'tamal@javeriana.edu.co' },
+            { id: 'u4', label: 'Arepa López', type: 'persona', info: 'Webmaster RAS', email: 'arepa@javeriana.edu.co' },
+            { id: 'u5', label: 'Ajiaco Ramírez', type: 'persona', info: 'Tesorero RAS', email: 'ajiaco@javeriana.edu.co' },
 
-        /* Tooltip Custom Flotante en CSS Glassmorphism */
-        #custom-tooltip {
-            position: absolute;
-            pointer-events: none;
-            z-index: 100;
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(16px);
-            border-radius: 10px;
-            padding: 10px 16px;
-            min-width: 190px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 0, 0, 0.5);
-            transition: opacity 0.15s ease, transform 0.15s ease;
-            opacity: 0;
-            transform: translate(-50%, -100%) scale(0.95);
-        }
-        #custom-tooltip.visible {
-            opacity: 1;
-            transform: translate(-50%, -115%) scale(1);
-        }
-        #custom-tooltip.persona-border {
-            border: 1px solid rgba(56, 189, 248, 0.4);
-        }
-        #custom-tooltip.proyecto-border {
-            border: 1px solid rgba(52, 211, 153, 0.4);
-        }
-        .tooltip-tag {
-            font-size: 0.68rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            text-transform: uppercase;
-            display: inline-block;
-            margin-bottom: 4px;
-        }
-        .tag-persona {
-            background: rgba(56, 189, 248, 0.2);
-            color: #38bdf8;
-        }
-        .tag-proyecto {
-            background: rgba(52, 211, 153, 0.2);
-            color: #34d399;
-        }
-        .tooltip-title {
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: #f8fafc;
-            margin-bottom: 2px;
-        }
-        .tooltip-info {
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-        .tooltip-extra {
-            font-size: 0.75rem;
-            color: #64748b;
-            margin-top: 6px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding-top: 6px;
-        }
-    </style>
-</head>
-<body>
+            { id: 'p1', label: 'Robot Sumo Autónomo', type: 'proyecto', info: 'Estado: Completado', tech: 'C++, ROS2, PCB' },
+            { id: 'p2', label: 'Brazo Háptico 6-DOF', type: 'proyecto', info: 'Estado: En Desarrollo', tech: 'Python, Arduino' },
+            { id: 'p3', label: 'Visión Drones YOLOv8', type: 'proyecto', info: 'Estado: Fase Inicial', tech: 'PyTorch, OpenCV' },
+            { id: 'p4', label: 'Simulador ROS2 Gazebo', type: 'proyecto', info: 'Estado: Completado', tech: 'Gazebo, Linux' }
+        ],
+        edges: [
+            { from: 'u1', to: 'p1' },
+            { from: 'u2', to: 'p1' },
+            { from: 'u1', to: 'p2' },
+            { from: 'u3', to: 'p2' },
+            { from: 'u4', to: 'p3' },
+            { from: 'u5', to: 'p3' },
+            { from: 'u2', to: 'p4' },
+            { from: 'u4', to: 'p4' }
+        ]
+    };
 
-    <div id="header">
-        <div>
-            <h1>Red de Colaboración High-End</h1>
-            <p>Visualización interactiva de relaciones entre miembros y proyectos</p>
-        </div>
-        <div id="legend">
-            <div class="legend-item">
-                <span class="legend-color-persona"></span> Persona
-            </div>
-            <div class="legend-item">
-                <span class="legend-color-proyecto"></span> Proyecto
-            </div>
-        </div>
-    </div>
+    // Autocompletado del buscador
+    const dataList = document.getElementById('nodes-list');
+    dataset.nodes.forEach(n => {
+        const opt = document.createElement('option');
+        opt.value = n.label;
+        dataList.appendChild(opt);
+    });
 
-    <!-- Contenedor del Grafo -->
-    <div id="mynetwork"></div>
-
-    <!-- Tooltip Custom Element -->
-    <div id="custom-tooltip">
-        <span id="tt-tag" class="tooltip-tag">Type</span>
-        <div id="tt-title" class="tooltip-title">Title</div>
-        <div id="tt-info" class="tooltip-info">Info</div>
-        <div id="tt-extra" class="tooltip-extra">Extra</div>
-    </div>
-
-    <script type="text/javascript">
-        // 1. Dataset Mock (JSON)
-        const dataset = {
-            nodes: [
-                { id: 'u1', label: 'Migao Mendoza', type: 'persona', info: 'Presidente RAS', email: 'migao@javeriana.edu.co' },
-                { id: 'u2', label: 'Empanada Pérez', type: 'persona', info: 'Vicepresidente RAS', email: 'empanada@javeriana.edu.co' },
-                { id: 'u3', label: 'Tamal García', type: 'persona', info: 'Secretario RAS', email: 'tamal@javeriana.edu.co' },
-                { id: 'u4', label: 'Arepa López', type: 'persona', info: 'Webmaster RAS', email: 'arepa@javeriana.edu.co' },
-                { id: 'u5', label: 'Ajiaco Ramírez', type: 'persona', info: 'Tesorero RAS', email: 'ajiaco@javeriana.edu.co' },
-                
-                { id: 'p1', label: 'Robot Sumo Autónomo', type: 'proyecto', info: 'Estado: Completado', tech: 'C++, ROS2, PCB' },
-                { id: 'p2', label: 'Brazo Háptico 6-DOF', type: 'proyecto', info: 'Estado: En Desarrollo', tech: 'Python, Arduino' },
-                { id: 'p3', label: 'Visión Drones YOLOv8', type: 'proyecto', info: 'Estado: Fase Inicial', tech: 'PyTorch, OpenCV' },
-                { id: 'p4', label: 'Simulador ROS2 Gazebo', type: 'proyecto', info: 'Estado: Completado', tech: 'Gazebo, Linux' }
-            ],
-            edges: [
-                { from: 'u1', to: 'p1' }, 
-                { from: 'u2', to: 'p1' }, 
-                { from: 'u1', to: 'p2' },
-                { from: 'u3', to: 'p2' },
-                { from: 'u4', to: 'p3' },
-                { from: 'u5', to: 'p3' },
-                { from: 'u2', to: 'p4' },
-                { from: 'u4', to: 'p4' }
-            ]
-        };
-
-        // 2. Procesamiento de Nodos con Estilos "High-End Dark Mode"
-        const formattedNodes = dataset.nodes.map(node => {
-            const isPersona = node.type === 'persona';
-            return {
-                id: node.id,
-                label: node.label,
-                shape: isPersona ? 'dot' : 'diamond',
-                size: isPersona ? 20 : 24,
-                color: {
-                    background: isPersona ? '#0284c7' : '#059669',
-                    border: isPersona ? '#38bdf8' : '#34d399',
-                    highlight: {
-                        background: isPersona ? '#38bdf8' : '#34d399',
-                        border: isPersona ? '#bae6fd' : '#a7f3d0'
-                    },
-                    hover: {
-                        background: isPersona ? '#38bdf8' : '#34d399',
-                        border: '#ffffff'
-                    }
+    const formattedNodes = dataset.nodes.map(node => {
+        const isPersona = node.type === 'persona';
+        return {
+            id: node.id,
+            label: node.label,
+            shape: isPersona ? 'dot' : 'diamond',
+            size: isPersona ? 20 : 24,
+            color: {
+                background: isPersona ? '#0284c7' : '#059669',
+                border: isPersona ? '#38bdf8' : '#34d399',
+                highlight: {
+                    background: isPersona ? '#38bdf8' : '#34d399',
+                    border: isPersona ? '#bae6fd' : '#a7f3d0'
                 },
-                shadow: {
-                    enabled: true,
-                    color: isPersona ? 'rgba(56, 189, 248, 0.45)' : 'rgba(52, 211, 153, 0.45)',
-                    size: 18,
-                    x: 0,
-                    y: 0
-                },
-                borderWidth: 2,
-                borderWidthSelected: 4,
-                font: { 
-                    color: '#f8fafc',
-                    face: 'Inter, system-ui, sans-serif',
-                    size: 13,
-                    strokeWidth: 0,
-                    background: 'rgba(15, 23, 42, 0.75)',
-                    bold: { color: '#ffffff' }
-                },
-                meta: node
-            };
-        });
-
-        // 3. Procesamiento de Aristas
-        const formattedEdges = dataset.edges.map((edge, index) => {
-            return {
-                id: `e${index}`,
-                from: edge.from,
-                to: edge.to,
-                color: { 
-                    color: 'rgba(148, 163, 184, 0.25)', 
-                    highlight: '#f43f5e',
-                    hover: '#fb7185'
-                },
-                width: 1.5,
-                selectionWidth: 3.5,
-                hoverWidth: 2.5,
-                smooth: {
-                    type: 'continuous',
-                    roundness: 0.2
+                hover: {
+                    background: isPersona ? '#38bdf8' : '#34d399',
+                    border: '#ffffff'
                 }
-            };
-        });
-
-        const nodesDataSet = new vis.DataSet(formattedNodes);
-        const edgesDataSet = new vis.DataSet(formattedEdges);
-        const data = { nodes: nodesDataSet, edges: edgesDataSet };
-
-        // 4. Configuración del Grafo y Físicas
-        const container = document.getElementById('mynetwork');
-        const tooltipEl = document.getElementById('custom-tooltip');
-        const ttTag = document.getElementById('tt-tag');
-        const ttTitle = document.getElementById('tt-title');
-        const ttInfo = document.getElementById('tt-info');
-        const ttExtra = document.getElementById('tt-extra');
-
-        const options = {
-            interaction: {
-                hover: true,
-                tooltipDelay: 300,
-                zoomView: true,
-                dragView: true,
-                selectConnectedEdges: false
             },
-            physics: {
-                solver: 'forceAtlas2Based',
-                forceAtlas2Based: {
-                    gravitationalConstant: -70,
-                    centralGravity: 0.012,
-                    springLength: 160,
-                    springConstant: 0.04,
-                    damping: 0.5
-                },
-                maxVelocity: 35,
-                timestep: 0.35,
-                stabilization: {
-                    enabled: true,
-                    iterations: 120,
-                    updateInterval: 25
-                }
-            }
+            shadow: {
+                enabled: true,
+                color: isPersona ? 'rgba(56, 189, 248, 0.45)' : 'rgba(52, 211, 153, 0.45)',
+                size: 18,
+                x: 0,
+                y: 0
+            },
+            borderWidth: 2,
+            borderWidthSelected: 4,
+            font: {
+                color: '#f8fafc',
+                face: 'Inter, system-ui, sans-serif',
+                size: 13,
+                strokeWidth: 0,
+                background: 'rgba(15, 23, 42, 0.75)'
+            },
+            meta: node,
+            hidden: false
         };
+    });
 
-        const network = new vis.Network(container, data, options);
+    const formattedEdges = dataset.edges.map((edge, index) => ({
+        id: `e${index}`,
+        from: edge.from,
+        to: edge.to,
+        color: {
+            color: 'rgba(148, 163, 184, 0.25)',
+            highlight: '#f43f5e',
+            hover: '#fb7185'
+        },
+        width: 1.5,
+        selectionWidth: 3.5,
+        hoverWidth: 2.5,
+        smooth: { type: 'continuous', roundness: 0.2 }
+    }));
 
-        // 5. Tooltip Flotante Personalizado
-        network.on("hoverNode", function (params) {
-            const node = nodesDataSet.get(params.node);
-            if (node && node.meta) {
-                const domPos = network.canvasToDOM(network.getPosition(params.node));
-                
-                tooltipEl.style.left = domPos.x + 'px';
-                tooltipEl.style.top = (domPos.y + container.offsetTop) + 'px';
+    const nodesDataSet = new vis.DataSet(formattedNodes);
+    const edgesDataSet = new vis.DataSet(formattedEdges);
+    const container = document.getElementById('mynetwork');
 
-                ttTag.textContent = node.meta.type;
-                ttTag.className = `tooltip-tag tag-${node.meta.type}`;
-                ttTitle.textContent = node.meta.label;
-                ttInfo.textContent = node.meta.info;
-                ttExtra.textContent = node.meta.email || node.meta.tech || '';
-                
-                tooltipEl.className = `visible ${node.meta.type}-border`;
+    // CONFIGURACIÓN CLAVE: Físicas calculadas al inicio y apagadas por completo
+    const options = {
+        interaction: {
+            hover: true,
+            tooltipDelay: 100,
+            zoomView: true,
+            dragView: true,
+            selectConnectedEdges: false
+        },
+        physics: {
+            enabled: false // Totalmente desactivado en tiempo real
+        }
+    };
+
+    // Crear red y forzar organización instantánea al cargar
+    const network = new vis.Network(container, { nodes: nodesDataSet, edges: edgesDataSet }, options);
+
+    // Aplicar diseño de distribución una sola vez al cargar sin animaciones continuas
+    network.setOptions({
+        physics: {
+            enabled: true,
+            solver: 'forceAtlas2Based',
+            stabilization: {
+                enabled: true,
+                iterations: 500 // Precalcula la posición ideal antes de renderizar
             }
-        });
+        }
+    });
 
-        network.on("blurNode", function () {
-            tooltipEl.className = '';
-        });
+    // Una vez precalculado, congelar definitivamente la simulación
+    network.once("stabilizationIterationsDone", function () {
+        network.setOptions({ physics: { enabled: false } });
+    });
 
-        // 6. Lógica de Enfoque al hacer clic
-        network.on("click", function (params) {
-            if (params.nodes.length > 0) {
-                const selectedNodeId = params.nodes[0];
-                const connectedNodes = network.getConnectedNodes(selectedNodeId);
-                const connectedEdges = network.getConnectedEdges(selectedNodeId);
+    // Tooltip flotante
+    const tooltipEl = document.getElementById('custom-tooltip');
+    let currentMouseX = 0;
+    let currentMouseY = 0;
 
-                const updateNodes = nodesDataSet.get().map(node => {
-                    const isConnected = node.id === selectedNodeId || connectedNodes.includes(node.id);
-                    return { 
-                        id: node.id, 
-                        opacity: isConnected ? 1 : 0.12,
-                        font: { 
-                            color: isConnected ? '#ffffff' : 'rgba(255, 255, 255, 0.2)',
-                            background: isConnected ? 'rgba(15, 23, 42, 0.9)' : 'transparent'
-                        }
-                    };
-                });
-                nodesDataSet.update(updateNodes);
+    document.addEventListener('mousemove', (e) => {
+        currentMouseX = e.clientX;
+        currentMouseY = e.clientY;
+        if (tooltipEl.classList.contains('visible')) {
+            tooltipEl.style.left = `${currentMouseX}px`;
+            tooltipEl.style.top = `${currentMouseY}px`;
+        }
+    });
 
-                const updateEdges = edgesDataSet.get().map(edge => {
-                    const isConnected = connectedEdges.includes(edge.id);
-                    return { 
-                        id: edge.id, 
-                        opacity: isConnected ? 1 : 0.05,
-                        width: isConnected ? 3 : 1,
-                        color: { color: isConnected ? '#f43f5e' : 'rgba(148, 163, 184, 0.05)' }
-                    };
-                });
-                edgesDataSet.update(updateEdges);
+    network.on("hoverNode", function (params) {
+        const node = nodesDataSet.get(params.node);
+        if (node && node.meta) {
+            document.getElementById('tt-tag').textContent = node.meta.type;
+            document.getElementById('tt-tag').className = `tooltip-tag tag-${node.meta.type}`;
+            document.getElementById('tt-title').textContent = node.meta.label;
+            document.getElementById('tt-info').textContent = node.meta.info;
+            document.getElementById('tt-extra').textContent = node.meta.email || node.meta.tech || '';
 
-            } else {
-                const updateNodes = nodesDataSet.get().map(node => ({ 
-                    id: node.id, 
-                    opacity: 1,
-                    font: { color: '#f8fafc', background: 'rgba(15, 23, 42, 0.75)' }
-                }));
-                nodesDataSet.update(updateNodes);
-                
-                const updateEdges = edgesDataSet.get().map(edge => ({ 
-                    id: edge.id, 
-                    opacity: 1,
-                    width: 1.5,
-                    color: { color: 'rgba(148, 163, 184, 0.25)' }
-                }));
-                edgesDataSet.update(updateEdges);
+            tooltipEl.style.left = `${currentMouseX}px`;
+            tooltipEl.style.top = `${currentMouseY}px`;
+            tooltipEl.className = `visible ${node.meta.type}-border`;
+        }
+    });
+
+    network.on("blurNode", function () {
+        tooltipEl.className = '';
+    });
+
+    // Click en nodos para resaltar
+    network.on("click", function (params) {
+        if (params.nodes.length > 0) {
+            const selectedNodeId = params.nodes[0];
+            const connectedNodes = network.getConnectedNodes(selectedNodeId);
+            const connectedEdges = network.getConnectedEdges(selectedNodeId);
+
+            nodesDataSet.update(nodesDataSet.get().map(node => {
+                const isConnected = node.id === selectedNodeId || connectedNodes.includes(node.id);
+                return {
+                    id: node.id,
+                    opacity: isConnected ? 1 : 0.12,
+                    font: { color: isConnected ? '#ffffff' : 'rgba(255, 255, 255, 0.2)' }
+                };
+            }));
+
+            edgesDataSet.update(edgesDataSet.get().map(edge => {
+                const isConnected = connectedEdges.includes(edge.id);
+                return {
+                    id: edge.id,
+                    width: isConnected ? 3 : 1,
+                    color: { color: isConnected ? '#f43f5e' : 'rgba(148, 163, 184, 0.05)' }
+                };
+            }));
+        } else {
+            nodesDataSet.update(nodesDataSet.get().map(node => ({
+                id: node.id,
+                opacity: 1,
+                font: { color: '#f8fafc' }
+            })));
+            edgesDataSet.update(edgesDataSet.get().map(edge => ({
+                id: edge.id,
+                width: 1.5,
+                color: { color: 'rgba(148, 163, 184, 0.25)' }
+            })));
+        }
+    });
+
+    // Botones Zoom / Fit
+    document.getElementById('btn-zoom-in').addEventListener('click', () => {
+        network.moveTo({ scale: network.getScale() * 1.25, animation: { duration: 300 } });
+    });
+    document.getElementById('btn-zoom-out').addEventListener('click', () => {
+        network.moveTo({ scale: network.getScale() * 0.8, animation: { duration: 300 } });
+    });
+    document.getElementById('btn-reset').addEventListener('click', () => {
+        network.fit({ animation: { duration: 500 } });
+    });
+
+    // Toggle por categorías
+    const stateVisibility = { persona: true, proyecto: true };
+
+    function toggleType(type, elementId) {
+        stateVisibility[type] = !stateVisibility[type];
+        document.getElementById(elementId).classList.toggle('disabled', !stateVisibility[type]);
+
+        const nodesToUpdate = nodesDataSet.get().map(n => {
+            if (n.meta.type === type) {
+                return { id: n.id, hidden: !stateVisibility[type] };
             }
-        });
+            return null;
+        }).filter(Boolean);
 
-    </script>
+        nodesDataSet.update(nodesToUpdate);
+    }
+
+    document.getElementById('toggle-persona').addEventListener('click', () => toggleType('persona', 'toggle-persona'));
+    document.getElementById('toggle-proyecto').addEventListener('click', () => toggleType('proyecto', 'toggle-proyecto'));
+
+    // Buscador
+    document.getElementById('node-search').addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        if (!query) return;
+
+        const foundNode = nodesDataSet.get().find(n => n.label.toLowerCase().includes(query));
+        if (foundNode) {
+            network.selectNodes([foundNode.id]);
+            network.focus(foundNode.id, { scale: 1.2, animation: { duration: 600 } });
+        }
+    });
+</script>
 </body>
+
 </html>

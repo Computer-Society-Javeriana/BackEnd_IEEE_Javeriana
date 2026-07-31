@@ -27,17 +27,24 @@ export default function Logros() {
           {logros.map((logro) => (
             <div className="timeline-item" key={logro.idLogro}>
               <div className="card" style={{ cursor: "default" }}>
-                <div style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
+                <div style={{ display: "flex", gap: "1.25rem", alignItems: "center", flexWrap: "wrap" }}>
                   <img
                     src={logro.imagen || "/src/assets/placeholder-logro.png"}
                     alt={logro.titulo}
-                    style={{ width: "120px", height: "90px", objectFit: "cover", borderRadius: "var(--radius-sm)", background: "var(--color-surface)" }}
+                    style={{ width: "130px", height: "95px", objectFit: "cover", borderRadius: "12px", background: "var(--color-surface)" }}
                   />
-                  <div className="card-body" style={{ padding: "0.75rem 0" }}>
-                    <span className="badge badge-success">Logro</span>
-                    <h3>{logro.titulo}</h3>
-                    <p>{logro.descripcion}</p>
-                    <Link to={`/logros/${logro.idLogro}`} className="btn btn-outline btn-sm" style={{ marginTop: "0.75rem" }}>
+                  <div className="card-body" style={{ padding: "0.5rem 0", flex: 1 }}>
+                    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginBottom: "0.4rem" }}>
+                      <span className="badge badge-success">Logro</span>
+                      {logro.capitulo && (
+                        <span className="badge badge-primary">
+                          {logro.capitulo.nombre || logro.capitulo.idCapitulo}
+                        </span>
+                      )}
+                    </div>
+                    <h3 style={{ fontSize: "1.15rem", marginBottom: "0.4rem" }}>{logro.titulo}</h3>
+                    <p style={{ color: "var(--color-text-secondary)", fontSize: "0.95rem" }}>{logro.descripcion}</p>
+                    <Link to={`/logros/${logro.idLogro}`} className="btn btn-outline btn-sm" style={{ marginTop: "0.75rem", display: "inline-block" }}>
                       Ver detalles →
                     </Link>
                   </div>

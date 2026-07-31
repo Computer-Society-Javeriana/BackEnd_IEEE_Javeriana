@@ -9,7 +9,13 @@ export default function Equipo() {
 
   useEffect(() => {
     getUsuarios()
-      .then(setMiembros)
+      .then((data) => {
+        // Filter: only show users with a role in the "IEEE" chapter (general board)
+        const membersOfIEEE = data.filter((miembro) =>
+          miembro.roles?.some((r) => r.capitulo?.idCapitulo === "IEEE")
+        );
+        setMiembros(membersOfIEEE);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);

@@ -1,15 +1,20 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getCapitulos, getLogros, getEventos } from "../services/api";
+import { getChapterLogoUrl } from "../utils/chapterLogo";
 
 export default function Home() {
   const [capitulos, setCapitulos] = useState([]);
   const [logros, setLogros] = useState([]);
   const [eventos, setEventos] = useState([]);
+  const [loadingCapitulos, setLoadingCapitulos] = useState(true);
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    getCapitulos().then(setCapitulos).catch(() => { });
+    getCapitulos()
+      .then(setCapitulos)
+      .catch(() => { })
+      .finally(() => setLoadingCapitulos(false));
     getLogros().then((data) => setLogros(data.slice(0, 3))).catch(() => { });
     getEventos().then((data) => setEventos(data.slice(0, 3))).catch(() => { });
 
@@ -74,17 +79,19 @@ export default function Home() {
         <div className="page-container">
           <h2 className="section-title">Nuestros Capítulos</h2>
           <p className="section-subtitle">Conoce los semilleros que conforman la rama IEEE</p>
-          <div className="grid-3">
-            {capitulos.length > 0 ? (
-              capitulos.map((cap) => (
+          {loadingCapitulos ? (
+            <p className="loading">Cargando capítulos...</p>
+          ) : capitulos.length > 0 ? (
+            <div className="grid-3">
+              {capitulos.map((cap) => (
                 <Link to={`/capitulos/${cap.idCapitulo}`} key={cap.idCapitulo} className="card reveal-on-scroll">
                   <img
-                    src={cap.logo || "/src/assets/placeholder-capitulo.png"}
+                    src={getChapterLogoUrl(cap.logo, cap.idCapitulo, cap.nombre)}
                     alt={cap.nombre}
                     className="card-image"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='160' viewBox='0 0 300 160'%3E%3Crect width='300' height='160' fill='%23003366'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-weight='bold' font-size='16'%3E" + encodeURIComponent(cap.idCapitulo || "Capítulo") + "%3C/text%3E%3C/svg%3E";
+                      e.target.src = getChapterLogoUrl(null, cap.idCapitulo, cap.nombre);
                     }}
                   />
                   <div className="card-body">
@@ -92,11 +99,13 @@ export default function Home() {
                     <p>Capítulo {cap.idCapitulo}</p>
                   </div>
                 </Link>
-              ))
-            ) : (
-              <p className="loading">Cargando capítulos...</p>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p style={{ textAlign: "center", color: "var(--color-text-secondary)" }}>
+              No hay capítulos disponibles en este momento.
+            </p>
+          )}
         </div>
       </section>
 

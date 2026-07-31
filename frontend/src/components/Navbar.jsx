@@ -19,6 +19,7 @@ export default function Navbar() {
           <li><Link to="/eventos" className={isActive("/eventos")}>Eventos</Link></li>
           <li><Link to="/logros" className={isActive("/logros")}>Logros</Link></li>
           <li><Link to="/equipo" className={isActive("/equipo")}>Equipo</Link></li>
+          <li><Link to="/red" className={isActive("/red")}>Red</Link></li>
           <li><Link to="/login" className="btn btn-primary btn-sm">Ingresar</Link></li>
         </ul>
       </div>

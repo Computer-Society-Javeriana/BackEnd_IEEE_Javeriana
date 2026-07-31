@@ -41,4 +41,8 @@ public class Usuario {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "contrasenia_hash", nullable = false)
     private String contraseniaHash;
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("usuario")
+    private java.util.List<UsuarioCapitulo> roles;
 }

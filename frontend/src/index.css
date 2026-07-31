@@ -124,6 +124,20 @@ img {
   gap: 1.5rem;
 }
 
+.flex-team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 900px; /* Fuerza un máximo de 3 tarjetas por fila (3x260px + gaps = ~850px) */
+  margin: 0 auto;   /* Centra todo el bloque en la pantalla */
+}
+
+.flex-team-grid > .card {
+  flex: 0 1 260px;
+  max-width: 260px;
+}
+
 /* ==================== CARDS ==================== */
 .card {
   background: var(--color-bg-card);

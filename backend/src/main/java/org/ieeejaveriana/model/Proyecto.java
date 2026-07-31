@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "proyectos")
@@ -44,7 +45,8 @@ public class Proyecto {
             joinColumns = @JoinColumn(name = "id_proyecto"),
             inverseJoinColumns = @JoinColumn(name = "id_usuario")
     )
-    private List<Usuario> colaboradores;
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"roles", "contraseniaHash"})
+    private Set<Usuario> colaboradores;
 
     @ManyToMany
     @JoinTable(
@@ -52,5 +54,5 @@ public class Proyecto {
             joinColumns = @JoinColumn(name = "id_proyectos"),
             inverseJoinColumns = @JoinColumn(name = "id_tema")
     )
-    private List<Tema> temas;
+    private Set<Tema> temas;
 }

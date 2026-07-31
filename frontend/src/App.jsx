@@ -15,6 +15,7 @@ import PerfilPublico from "./pages/PerfilPublico";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import MiPerfil from "./pages/MiPerfil";
+import RedColaboracion from "./pages/Red";
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/mi-perfil" element={<MiPerfil />} />
+            <Route path="/red" element={<RedColaboracion />} />
           </Routes>
         </main>
         <Footer />

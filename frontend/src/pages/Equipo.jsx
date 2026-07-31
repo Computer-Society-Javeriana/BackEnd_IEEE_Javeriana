@@ -31,35 +31,40 @@ export default function Equipo() {
           </p>
         </div>
       ) : (
-        <div className="grid-3">
+        <div className="flex-team-grid">
           {miembros.map((miembro) => (
             <Link to={`/perfil/${miembro.idUsuario}`} key={miembro.idUsuario} className="card">
-              <div className="card-body" style={{ textAlign: "center", padding: "2rem 1.5rem" }}>
-                <img
-                  src={getAvatarUrl(miembro)}
-                  alt={miembro.nombre}
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = getAvatarUrl(miembro);
-                  }}
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    margin: "0 auto 1rem",
-                    border: "3px solid var(--color-primary)",
-                    background: "var(--color-surface)",
-                  }}
-                />
+              <img
+                src={getAvatarUrl(miembro)}
+                alt={miembro.nombre}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = getAvatarUrl(miembro);
+                }}
+                className="card-image"
+                style={{
+                  height: "auto",
+                  aspectRatio: "3/4",
+                  objectFit: "cover",
+                  borderBottom: "none"
+                }}
+              />
+              <div className="card-body" style={{ textAlign: "center", padding: "1.5rem" }}>
                 <h3>{miembro.nombre}</h3>
-                <p style={{ color: "var(--color-accent)", fontSize: "0.85rem", marginBottom: "0.5rem" }}>
-                  Miembro IEEE
-                </p>
-                <p>{miembro.biografia || "Sin descripción"}</p>
-                <span className="btn btn-outline btn-sm" style={{ marginTop: "1rem" }}>
-                  Ver detalles →
-                </span>
+                {miembro.roles && miembro.roles.length > 0 ? (
+                  <div style={{ marginBottom: "0.5rem" }}>
+                    {miembro.roles.map(r => (
+                      <span key={r.idUsuarioCapitulo} className="badge badge-primary" style={{ display: "inline-block", margin: "2px", fontSize: "0.75rem" }}>
+                        {r.rol} - {r.capitulo?.idCapitulo}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p style={{ color: "var(--color-accent)", fontSize: "0.85rem", marginBottom: "0.5rem" }}>
+                    Miembro IEEE
+                  </p>
+                )}
+                <p style={{ display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{miembro.biografia || "Sin descripción"}</p>
               </div>
             </Link>
           ))}

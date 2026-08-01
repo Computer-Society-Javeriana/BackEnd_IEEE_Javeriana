@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getProyectos } from "../services/api";
 
+import { getChapterLogoUrl } from "../utils/chapterLogo";
+
 export default function Proyectos() {
   const [proyectos, setProyectos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +29,7 @@ export default function Proyectos() {
           {proyectos.map((proy) => (
             <Link to={`/proyectos/${proy.idProyecto}`} key={proy.idProyecto} className="card">
               <img
-                src={proy.imagen || "/src/assets/placeholder-proyecto.png"}
+                src={proy.imagen && !proy.imagen.startsWith("/src/") ? proy.imagen : getChapterLogoUrl(null, proy.idProyecto, proy.nombre)}
                 alt={proy.nombre}
                 className="card-image"
               />

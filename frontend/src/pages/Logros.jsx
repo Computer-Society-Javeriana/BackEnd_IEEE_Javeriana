@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getLogros } from "../services/api";
 
+import { getChapterLogoUrl } from "../utils/chapterLogo";
+
 export default function Logros() {
   const [logros, setLogros] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ export default function Logros() {
               <div className="card" style={{ cursor: "default" }}>
                 <div style={{ display: "flex", gap: "1.25rem", alignItems: "center", flexWrap: "wrap" }}>
                   <img
-                    src={logro.imagen || "/src/assets/placeholder-logro.png"}
+                    src={logro.imagen && !logro.imagen.startsWith("/src/") ? logro.imagen : getChapterLogoUrl(null, logro.idLogro, logro.titulo)}
                     alt={logro.titulo}
                     style={{ width: "130px", height: "95px", objectFit: "cover", borderRadius: "12px", background: "var(--color-surface)" }}
                   />

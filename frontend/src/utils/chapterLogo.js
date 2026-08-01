@@ -23,7 +23,7 @@ export function getChapterLogoUrl(logo, idCapitulo, nombreCapitulo) {
   }
 
   // Buscar el logo local del capítulo
-  const key = (idCapitulo || nombreCapitulo || "").toUpperCase();
+  const key = String(idCapitulo || nombreCapitulo || "").toUpperCase();
   for (const [capKey, logoUrl] of Object.entries(chapterLogos)) {
     if (key.includes(capKey)) {
       return logoUrl;

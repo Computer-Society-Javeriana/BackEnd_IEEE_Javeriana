@@ -1,19 +1,56 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getProyectos } from "../services/api";
+import { getProyectos, buscarProyectosPorAutor, buscarProyectosPorCapitulo, buscarProyectosPorPalabras, buscarProyectosPorNombre } from "../services/api";
 
 import { getChapterLogoUrl } from "../utils/chapterLogo";
 
 export default function Proyectos() {
   const [proyectos, setProyectos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [busqueda, setBusqueda] = useState("");
+
+  const cargarTodos = () => {
+    setLoading(true);
+    getProyectos()
+        .then((data) => setProyectos(Array.isArray(data) ? data : []))
+        .catch(() => {})
+        .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
-    getProyectos()
-      .then((data) => setProyectos(Array.isArray(data) ? data : []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    cargarTodos();
   }, []);
+  const manejarBusqueda = async (e) => {
+    e.preventDefault();
+    const termino = busqueda.trim();
+
+    if (!termino) {
+      cargarTodos();
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const peticiones = await Promise.all([
+        buscarProyectosPorAutor(termino).catch(() => []),
+        buscarProyectosPorCapitulo(termino).catch(() => []),
+        buscarProyectosPorPalabras(termino).catch(() => []),
+        buscarProyectosPorNombre(termino).catch(() => [])
+      ]);
+
+      const resultadosCombinados = peticiones.flat();
+
+      const proyectosUnicos = Array.from(
+          new Map(resultadosCombinados.map(proy => [proy.idProyecto, proy])).values()
+      );
+
+      setProyectos(proyectosUnicos);
+    } catch (error) {
+      setProyectos([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="page-container">

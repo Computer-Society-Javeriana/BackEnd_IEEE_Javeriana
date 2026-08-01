@@ -52,6 +52,18 @@ export const actualizarProyecto = (id, data) =>
 export const eliminarProyecto = (id) =>
   request(`/proyectos/${id}`, { method: "DELETE" });
 
+export const buscarProyectosPorAutor = (NombreAutor) =>
+    request(`/proyectos/autor/${NombreAutor}`);
+
+export const buscarProyectosPorCapitulo = (NombreCapitulo) =>
+    request(`/proyectos/capitulo/${NombreCapitulo}`);
+
+export const buscarProyectosPorPalabras = (Palabras) =>
+    request(`/proyectos/palabras?palabras=${Palabras}`);
+
+export const buscarProyectosPorNombre = (NombreProyecto) =>
+    request(`/proyectos/nombre/${NombreProyecto}`);
+
 // ==================== CUENTAS ====================
 export const crearCuenta = (data) =>
   request("/cuentas", { method: "POST", body: JSON.stringify(data) });

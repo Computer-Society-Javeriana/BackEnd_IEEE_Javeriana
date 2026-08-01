@@ -26,9 +26,24 @@ public class ProyectoService {
         return proyectoRepository.findByEstado(estado);
     }
 
-    public Proyecto crear(Proyecto proyecto) {
-        return proyectoRepository.save(proyecto);
+    //METEXPL: metodo para verificar si el nombre de un proyecto existe en la base de datos
+    public String encontrar_nombre_proyecto(String NombreProyecto) {
+        for (Proyecto ProyectoTemporal : proyectoRepository.findAll()) {
+            if (ProyectoTemporal.getNombre().equalsIgnoreCase(NombreProyecto)) {
+                return ProyectoTemporal.getNombre();
+            }
+        }
+        return null;
     }
+
+    //METEXPL: metodo para guardar un proyecto nuevo validando que el nombre no exista
+    public Proyecto crear(Proyecto ProyectoNuevo) {
+        if (encontrar_nombre_proyecto(ProyectoNuevo.getNombre()) != null) {
+            throw new RuntimeException("El nombre del proyecto ya está en uso");
+        }
+        return proyectoRepository.save(ProyectoNuevo);
+    }
+
 
     public Proyecto actualizar(Long id, Proyecto datosActualizados) {
         Proyecto proyecto = proyectoRepository.findById(id)

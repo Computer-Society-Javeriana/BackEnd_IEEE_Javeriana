@@ -1,0 +1,8 @@
+[providers]
+providers = ["java"]
+
+[build]
+cmds = ["mvn -DskipTests clean package"]
+
+[start]
+cmd = "java -jar target/*.jar"

@@ -36,6 +36,16 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        // 0. Asegurar capítulos iniciales si la BD está limpia
+        if (capituloRepository.count() == 0) {
+            capituloRepository.save(new Capitulo("IEEE", "IEEE Rama Estudiantil Javeriana", "ieee"));
+            capituloRepository.save(new Capitulo("RAS", "Robotics and Automation Society", "ras"));
+            capituloRepository.save(new Capitulo("CS", "Computer Society", "cs"));
+            capituloRepository.save(new Capitulo("WIE", "Women in Engineering", "wie"));
+            capituloRepository.save(new Capitulo("PES", "Power & Energy Society", "pes"));
+            capituloRepository.save(new Capitulo("EMBS", "Engineering in Medicine and Biology Society", "embs"));
+        }
+
         // 1. Obtener capítulos existentes desde la base de datos
         Capitulo ieee = capituloRepository.findById("IEEE").orElse(null);
         Capitulo ras = capituloRepository.findById("RAS").orElse(null);

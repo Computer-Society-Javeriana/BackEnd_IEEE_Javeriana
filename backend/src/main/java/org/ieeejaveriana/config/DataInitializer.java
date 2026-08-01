@@ -143,7 +143,7 @@ public class DataInitializer implements CommandLineRunner {
                     p.setEstado(random.nextBoolean() ? "En Desarrollo" : "Completado");
                     p.setFecha(LocalDateTime.now().minusDays(random.nextInt(365)));
                     p.setGithub("https://github.com/IEEE-Javeriana/" + idea[0].toLowerCase().replace(" ", "-"));
-                    p.setImagen("/src/assets/placeholder-proyecto.png");
+                    p.setImagen(null);
 
                     // Asignar 1 a 3 colaboradores de los usuarios existentes
                     int numColab = 1 + random.nextInt(3);
@@ -186,7 +186,7 @@ public class DataInitializer implements CommandLineRunner {
             l1.setCapitulo(ras != null ? ras : ieee);
             l1.setTitulo("1er Lugar Nacional en Competencia de Robótica IEEE");
             l1.setDescripcion("El capítulo RAS IEEE Javeriana obtuvo el primer puesto en la categoría de robots autónomos de exploración en el Torneo Nacional 2025.");
-            l1.setImagen("/src/assets/placeholder-logro.png");
+            l1.setImagen(null);
             if (migao != null) l1.setContribuyentes(List.of(migao, empanada != null ? empanada : migao));
             logroRepository.save(l1);
 
@@ -196,7 +196,7 @@ public class DataInitializer implements CommandLineRunner {
             l2.setCapitulo(cs != null ? cs : ieee);
             l2.setTitulo("Ganadores del Hackathon Internacional de Software");
             l2.setDescripcion("Reconocimiento de primer lugar por desarrollar la plataforma de ayuda humanitaria y distribución eficiente de recursos.");
-            l2.setImagen("/src/assets/placeholder-logro.png");
+            l2.setImagen(null);
             if (diana != null) l2.setContribuyentes(List.of(diana));
             logroRepository.save(l2);
 
@@ -206,7 +206,7 @@ public class DataInitializer implements CommandLineRunner {
             l3.setCapitulo(wie != null ? wie : ieee);
             l3.setTitulo("Premio al Ejemplo de Liderazgo Estudiantil en STEM");
             l3.setDescripcion("Galardón recibido por la iniciativa de talleres y mentorías en ciencia y tecnología para jóvenes mujeres de colegios.");
-            l3.setImagen("/src/assets/placeholder-logro.png");
+            l3.setImagen(null);
             if (diana != null) l3.setContribuyentes(List.of(diana));
             logroRepository.save(l3);
 
@@ -216,7 +216,7 @@ public class DataInitializer implements CommandLineRunner {
             l4.setCapitulo(pes != null ? pes : ieee);
             l4.setTitulo("Mejor Proyecto de Energías Renovables R9 Latam");
             l4.setDescripcion("Premio latinoamericano por el diseño e implementación del microgrid solar experimental en el campus javeriano.");
-            l4.setImagen("/src/assets/placeholder-logro.png");
+            l4.setImagen(null);
             if (santiago != null) l4.setContribuyentes(List.of(santiago));
             logroRepository.save(l4);
 
@@ -226,7 +226,7 @@ public class DataInitializer implements CommandLineRunner {
             l5.setCapitulo(embs != null ? embs : ieee);
             l5.setTitulo("Publicación Destacada en Conferencia IEEE EMBC");
             l5.setDescripcion("Aceptación y presentación del artículo científico sobre procesamiento de señales ECG con modelos de IA embebidos.");
-            l5.setImagen("/src/assets/placeholder-logro.png");
+            l5.setImagen(null);
             if (migao != null) l5.setContribuyentes(List.of(migao));
             logroRepository.save(l5);
 
@@ -236,7 +236,7 @@ public class DataInitializer implements CommandLineRunner {
             l6.setCapitulo(ieee);
             l6.setTitulo("Capítulo Estudiantil Ejemplo de la Región 9 IEEE");
             l6.setDescripcion("Premio a la excelencia de la Rama Estudiantil IEEE Javeriana por su alto impacto académico y crecimiento comunitario.");
-            l6.setImagen("/src/assets/placeholder-logro.png");
+            l6.setImagen(null);
             if (diana != null && santiago != null) l6.setContribuyentes(List.of(diana, santiago));
             logroRepository.save(l6);
         }

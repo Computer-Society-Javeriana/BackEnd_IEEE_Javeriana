@@ -24,13 +24,17 @@ export default function CapituloDetalle() {
     ])
       .then(([capData, usuariosData, eventosData, logrosData, proyectosData]) => {
         setCapitulo(capData);
-        setJunta(usuariosData);
-        setEventos(eventosData.filter(e => e.capitulo?.idCapitulo === id));
-        setLogros(logrosData.filter(l => l.capitulo?.idCapitulo === id));
+        const safeUsuarios = Array.isArray(usuariosData) ? usuariosData : [];
+        const safeEventos = Array.isArray(eventosData) ? eventosData : [];
+        const safeLogros = Array.isArray(logrosData) ? logrosData : [];
+        const safeProyectos = Array.isArray(proyectosData) ? proyectosData : [];
+        setJunta(safeUsuarios);
+        setEventos(safeEventos.filter(e => e.capitulo?.idCapitulo === id));
+        setLogros(safeLogros.filter(l => l.capitulo?.idCapitulo === id));
         
         // Filter projects by checking if any project collaborator is in the chapter's board
-        const juntaIds = usuariosData.map(u => u.idUsuario);
-        setProyectos(proyectosData.filter(p => 
+        const juntaIds = safeUsuarios.map(u => u.idUsuario);
+        setProyectos(safeProyectos.filter(p => 
           p.colaboradores?.some(c => juntaIds.includes(c.idUsuario))
         ));
       })

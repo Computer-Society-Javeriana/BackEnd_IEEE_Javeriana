@@ -12,11 +12,11 @@ export default function Home() {
 
   useEffect(() => {
     getCapitulos()
-      .then(setCapitulos)
+      .then((data) => setCapitulos(Array.isArray(data) ? data : []))
       .catch(() => { })
       .finally(() => setLoadingCapitulos(false));
-    getLogros().then((data) => setLogros(data.slice(0, 3))).catch(() => { });
-    getEventos().then((data) => setEventos(data.slice(0, 3))).catch(() => { });
+    getLogros().then((data) => setLogros(Array.isArray(data) ? data.slice(0, 3) : [])).catch(() => { });
+    getEventos().then((data) => setEventos(Array.isArray(data) ? data.slice(0, 3) : [])).catch(() => { });
 
     const handleScroll = () => {
       setScrollY(window.scrollY);

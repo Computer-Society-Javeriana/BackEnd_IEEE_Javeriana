@@ -8,7 +8,7 @@ export default function Logros() {
 
   useEffect(() => {
     getLogros()
-      .then(setLogros)
+      .then((data) => setLogros(Array.isArray(data) ? data : []))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);

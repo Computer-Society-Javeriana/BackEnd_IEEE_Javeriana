@@ -1,17 +1,22 @@
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 async function request(endpoint, options = {}) {
-  const response = await fetch(`${API_BASE}${endpoint}`, {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-    ...options,
-  });
+  let response;
+  try {
+    response = await fetch(`${API_BASE}${endpoint}`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...options.headers,
+      },
+      ...options,
+    });
+  } catch (networkError) {
+    throw new Error("No se pudo conectar con el servidor. Verifica tu conexión.");
+  }
 
   if (!response.ok) {
-    const errorText = await response.text();
+    const errorText = await response.text().catch(() => "");
     throw new Error(errorText || `Error ${response.status}`);
   }
 

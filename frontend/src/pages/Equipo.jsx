@@ -10,8 +10,9 @@ export default function Equipo() {
   useEffect(() => {
     getUsuarios()
       .then((data) => {
+        const safeData = Array.isArray(data) ? data : [];
         // Filter: only show users with a role in the "IEEE" chapter (general board)
-        const membersOfIEEE = data.filter((miembro) =>
+        const membersOfIEEE = safeData.filter((miembro) =>
           miembro.roles?.some((r) => r.capitulo?.idCapitulo === "IEEE")
         );
         setMiembros(membersOfIEEE);

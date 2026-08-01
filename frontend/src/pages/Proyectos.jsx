@@ -8,7 +8,7 @@ export default function Proyectos() {
 
   useEffect(() => {
     getProyectos()
-      .then(setProyectos)
+      .then((data) => setProyectos(Array.isArray(data) ? data : []))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);

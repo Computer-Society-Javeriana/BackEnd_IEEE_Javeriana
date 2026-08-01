@@ -8,7 +8,7 @@ export default function Eventos() {
 
   useEffect(() => {
     getEventos()
-      .then(setEventos)
+      .then((data) => setEventos(Array.isArray(data) ? data : []))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);

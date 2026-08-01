@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import logoIEEE from "../assets/logo-ieee.png";
+import logoIEEENav from "../assets/logo-ieee-nav.png";
 
 export default function Navbar() {
   const location = useLocation();
@@ -9,7 +9,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand">
-          <img src={logoIEEE} alt="IEEE Javeriana" />
+          <img src={logoIEEENav} alt="IEEE Javeriana" style={{ height: "46px", width: "auto" }} />
         </Link>
         <ul className="navbar-links">
           <li><Link to="/" className={isActive("/")}>Inicio</Link></li>

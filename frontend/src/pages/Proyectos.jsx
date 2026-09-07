@@ -4,6 +4,8 @@ import { getProyectos, buscarProyectosPorAutor, buscarProyectosPorCapitulo, busc
 
 import { getChapterLogoUrl } from "../utils/chapterLogo";
 
+import { getChapterLogoUrl } from "../utils/chapterLogo";
+
 export default function Proyectos() {
   const [proyectos, setProyectos] = useState([]);
   const [loading, setLoading] = useState(true);

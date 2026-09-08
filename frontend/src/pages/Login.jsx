@@ -25,45 +25,31 @@ export default function Login() {
   };
 
   return (
-    <div className="page-container">
-      <div className="auth-container">
-        <h1>Iniciar Sesión</h1>
-        <p className="subtitle">Ingresa a tu cuenta IEEE Javeriana</p>
+      <div className="page-container animate-fade-in">
+        <div className="auth-container" style={{ background: "var(--color-bg-main)", border: "1px solid var(--color-border)", boxShadow: "0 10px 30px rgba(37, 58, 122, 0.1)", borderRadius: "12px" }}>
+          <h1 style={{ color: "var(--color-primary-dark)" }}>Iniciar Sesión</h1>
+          <p className="subtitle" style={{ color: "var(--color-primary)" }}>Ingresa a tu cuenta IEEE Javeriana</p>
 
-        {error && <div className="error-message">{error}</div>}
+          {error && <div className="error-message">{error}</div>}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="correo">Correo electrónico</label>
-            <input
-              id="correo"
-              type="email"
-              value={correo}
-              onChange={(e) => setCorreo(e.target.value)}
-              placeholder="tu@correo.edu.co"
-              required
-            />
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="correo" style={{ color: "var(--color-primary-dark)", fontWeight: "500" }}>Correo electrónico</label>
+              <input id="correo" type="email" value={correo} onChange={(e) => setCorreo(e.target.value)} placeholder="tu@correo.edu.co" required style={{ borderColor: "var(--color-border)" }} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="contrasenia" style={{ color: "var(--color-primary-dark)", fontWeight: "500" }}>Contraseña</label>
+              <input id="contrasenia" type="password" value={contrasenia} onChange={(e) => setContrasenia(e.target.value)} placeholder="••••••••" required style={{ borderColor: "var(--color-border)" }} />
+            </div>
+            <button type="submit" className="btn btn-primary" disabled={loading} style={{ backgroundColor: "var(--color-primary)", width: "100%", marginTop: "1rem" }}>
+              {loading ? "Ingresando..." : "Ingresar"}
+            </button>
+          </form>
+
+          <div className="auth-footer" style={{ marginTop: "1.5rem" }}>
+            ¿No tienes cuenta? <Link to="/registro" style={{ color: "var(--color-primary-dark)", fontWeight: "bold" }}>Crear una cuenta</Link>
           </div>
-          <div className="form-group">
-            <label htmlFor="contrasenia">Contraseña</label>
-            <input
-              id="contrasenia"
-              type="password"
-              value={contrasenia}
-              onChange={(e) => setContrasenia(e.target.value)}
-              placeholder="••••••••"
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? "Ingresando..." : "Ingresar"}
-          </button>
-        </form>
-
-        <div className="auth-footer">
-          ¿No tienes cuenta? <Link to="/registro">Crear una cuenta</Link>
         </div>
       </div>
-    </div>
   );
 }
